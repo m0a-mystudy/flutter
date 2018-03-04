@@ -15,6 +15,7 @@ class MyApp extends StatelessWidget {
 
 class RandomWordsState extends State<RandomWords> {
   final _suggestions = <WordPair>[];
+  final _saved = new Set<WordPair>();
   final _biggerFont = const TextStyle(fontSize: 18.0);
   Widget _buildSuggestions() {
     return new ListView.builder(
@@ -29,6 +30,26 @@ class RandomWordsState extends State<RandomWords> {
         });
   }
 
+  Widget _buidRow(WordPair pair) {
+    final alreadySaved = this._saved.contains(pair);
+    return new ListTile(
+      title: new Text(pair.asPascalCase, style: _biggerFont),
+      trailing: new Icon(
+        alreadySaved ? Icons.favorite : Icons.favorite_border,
+        color: alreadySaved ? Colors.red : null,
+      ),
+      onTap: () {
+        setState(() {
+          if (alreadySaved) {
+            _saved.remove(pair);
+          } else {
+            _saved.add(pair);
+          }
+        });
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // final wordPair = new WordPair.random();
@@ -38,12 +59,6 @@ class RandomWordsState extends State<RandomWords> {
           title: new Text('Startup Name Generator'),
         ),
         body: _buildSuggestions());
-  }
-
-  Widget _buidRow(WordPair pair) {
-    return new ListTile(
-      title: new Text(pair.asPascalCase, style: _biggerFont),
-    );
   }
 }
 
